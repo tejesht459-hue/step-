@@ -32,10 +32,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         transition: { duration: 0.3 }
       }}
       viewport={{ once: true }}
-      className="card-hover group"
+      className="glass-card group h-full flex flex-col"
       style={{ transformStyle: 'preserve-3d' }}
     >
-      <div className="relative aspect-square overflow-hidden bg-gray-100">
+      <div className="relative aspect-square overflow-hidden rounded-t-2xl">
         <img 
           src={product.image} 
           alt={product.name}
@@ -46,8 +46,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <div className="absolute top-3 right-3 flex flex-col gap-2">
           <button 
             onClick={() => onToggleWishlist?.(product)}
-            className={`p-2 bg-white/80 backdrop-blur-sm rounded-full transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 ${
-              isLiked ? 'text-red-500 opacity-100 translate-y-0' : 'text-primary hover:text-red-500'
+            className={`p-2 bg-white/10 backdrop-blur-md rounded-full transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 border border-white/20 ${
+              isLiked ? 'text-red-500 opacity-100 translate-y-0' : 'text-white hover:text-red-500'
             }`}
           >
             <Heart size={18} fill={isLiked ? "currentColor" : "none"} />
@@ -56,7 +56,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.modelUrl && (
             <button 
               onClick={() => onView3D?.(product)}
-              className="p-2 bg-secondary text-white rounded-full transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 delay-75 shadow-lg hover:scale-110 active:scale-90"
+              className="p-2 bg-secondary text-white rounded-full transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300 delay-75 shadow-lg hover:scale-110 active:scale-90 border border-white/20"
               title="View in 3D"
             >
               <Box size={18} />
@@ -66,29 +66,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {product.isTrending && (
-            <span className="bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">
+            <span className="bg-secondary text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg">
               Trending
-            </span>
-          )}
-          {product.modelUrl && (
-            <span className="bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider flex items-center gap-1">
-              <Box size={10} /> 3D
             </span>
           )}
         </div>
 
         {/* Size Selector Overlay on Hover */}
-        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/60 to-transparent">
-          <p className="text-[10px] font-bold text-white/80 uppercase mb-2">Select Size (UK)</p>
+        <div className="absolute inset-x-0 bottom-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-black/80 to-transparent">
+          <p className="text-[10px] font-black text-white/80 uppercase mb-2 tracking-widest">Select Size (UK)</p>
           <div className="flex flex-wrap gap-1.5">
             {product.availableSizes.map(size => (
               <button
                 key={size}
                 onClick={() => setSelectedSize(size)}
-                className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                className={`w-8 h-8 rounded-lg text-xs font-black transition-all border ${
                   selectedSize === size 
-                    ? 'bg-secondary text-white shadow-lg scale-110' 
-                    : 'bg-white/20 text-white hover:bg-white/40 backdrop-blur-md'
+                    ? 'bg-secondary text-white border-secondary shadow-lg scale-110' 
+                    : 'bg-white/10 text-white border-white/20 hover:bg-white/30 backdrop-blur-md'
                 }`}
               >
                 {size}
@@ -98,44 +93,41 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
       
-      <div className="p-4">
-        <div className="flex justify-between items-start mb-1">
-          <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">{product.category}</span>
-          <span className="text-[10px] font-bold text-secondary">{product.brand}</span>
+      <div className="p-5 flex-1 flex flex-col">
+        <div className="flex justify-between items-start mb-2">
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/50 font-black">{product.category}</span>
+          <span className="text-[10px] font-black text-secondary uppercase tracking-widest">{product.brand}</span>
         </div>
-        <h3 className="font-bold text-primary mb-2 line-clamp-1">{product.name}</h3>
-        <div className="flex items-center gap-1 mb-3">
-          <div className="flex items-center text-yellow-500">
+        <h3 className="font-black text-white mb-2 line-clamp-1 uppercase tracking-tight">{product.name}</h3>
+        <div className="flex items-center gap-1 mb-4">
+          <div className="flex items-center text-secondary">
             {[...Array(5)].map((_, i) => (
               <Star 
                 key={i} 
                 size={12} 
                 fill={i < Math.floor(product.rating) ? "currentColor" : "none"} 
-                className={i < Math.floor(product.rating) ? "" : "text-gray-300"}
+                className={i < Math.floor(product.rating) ? "" : "text-white/20"}
               />
             ))}
           </div>
-          <span className="text-xs font-bold text-primary ml-1">{product.rating}</span>
-          <span className="text-[10px] text-gray-400">({product.reviewsCount.toLocaleString()})</span>
+          <span className="text-xs font-black text-white ml-1">{product.rating}</span>
         </div>
-        <div className="flex items-center justify-between">
-          <span className="text-lg font-black text-primary">₹{product.price.toLocaleString('en-IN')}</span>
+        <div className="mt-auto flex items-center justify-between">
+          <span className="text-xl font-black text-white tracking-tighter">₹{product.price.toLocaleString('en-IN')}</span>
           <button 
             onClick={() => {
               if (selectedSize) {
                 onAddToCart(product, selectedSize);
               } else {
-                // Shake effect or tooltip could go here, for now just alert
                 alert('Please select a size first');
               }
             }}
-            className={`p-2 rounded-lg transition-all active:scale-90 flex items-center gap-2 ${
+            className={`p-2.5 rounded-xl transition-all active:scale-95 flex items-center gap-2 border ${
               selectedSize 
-                ? 'bg-primary text-white hover:bg-secondary' 
-                : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                ? 'bg-secondary text-white border-secondary hover:shadow-[0_0_20px_rgba(255,99,33,0.4)]' 
+                : 'bg-white/5 text-white/30 border-white/10 cursor-not-allowed'
             }`}
           >
-            <span className="text-xs font-bold">{selectedSize ? `Size ${selectedSize}` : 'Select Size'}</span>
             <ShoppingCart size={18} />
           </button>
         </div>

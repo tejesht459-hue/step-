@@ -33,11 +33,10 @@ export const Hero: React.FC<{ onShopClick: () => void }> = ({ onShopClick }) => 
   const currentHero = HERO_IMAGES[currentIndex];
 
   return (
-    <section className="relative h-[600px] flex items-center overflow-hidden bg-primary">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-secondary via-transparent to-transparent blur-3xl"></div>
-      </div>
+    <section className="relative h-[700px] flex items-center overflow-hidden">
+      {/* Background Glows */}
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse"></div>
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse delay-1000"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
         <motion.div
@@ -45,31 +44,31 @@ export const Hero: React.FC<{ onShopClick: () => void }> = ({ onShopClick }) => 
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <span className="inline-block bg-secondary/20 text-secondary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-widest mb-6">
+          <span className="inline-block bg-white/10 backdrop-blur-md text-secondary font-black text-[10px] px-4 py-1.5 rounded-full uppercase tracking-[0.3em] mb-8 border border-white/20 shadow-xl">
             New Collection 2026
           </span>
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-6">
+          <h1 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-8 text-3d tracking-tighter uppercase">
             STEP INTO <br />
-            <span className="text-secondary">THE FUTURE</span>
+            <span className="text-secondary drop-shadow-[0_0_15px_rgba(255,99,33,0.5)]">THE FUTURE</span>
           </h1>
-          <p className="text-gray-300 text-lg mb-8 max-w-md">
-            Discover the perfect blend of performance and style. Our new arrivals are designed to keep you moving forward.
+          <p className="text-white/70 text-lg mb-10 max-w-md font-medium leading-relaxed">
+            Discover the perfect blend of performance and style. Our new arrivals are designed to keep you moving forward with cutting-edge 3D technology.
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-6">
             <button 
               onClick={onShopClick}
-              className="btn-secondary flex items-center gap-2 group"
+              className="btn-secondary flex items-center gap-3 group px-8 py-4"
             >
               Shop Now
-              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+              <ArrowRight size={22} className="group-hover:translate-x-1.5 transition-transform" />
             </button>
-            <button className="px-6 py-2 rounded-lg font-semibold text-white border border-white/20 hover:bg-white/10 transition-all">
+            <button className="px-8 py-4 rounded-2xl font-black text-white border border-white/20 hover:bg-white/10 transition-all uppercase tracking-widest text-sm backdrop-blur-sm">
               View Lookbook
             </button>
           </div>
         </motion.div>
 
-        <div className="relative hidden lg:block h-[500px]" style={{ perspective: 1000 }}>
+        <div className="relative hidden lg:block h-[550px]" style={{ perspective: 1500 }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
@@ -79,7 +78,7 @@ export const Hero: React.FC<{ onShopClick: () => void }> = ({ onShopClick }) => 
                 scale: 1, 
                 rotateY: 0,
                 x: 0,
-                y: [0, -20, 0],
+                y: [0, -30, 0],
               }}
               exit={{ opacity: 0, scale: 0.8, rotateY: -45, x: -100 }}
               transition={{ 
@@ -88,49 +87,50 @@ export const Hero: React.FC<{ onShopClick: () => void }> = ({ onShopClick }) => 
                 rotateY: { duration: 0.5 },
                 x: { duration: 0.5 },
                 y: { 
-                  duration: 5, 
+                  duration: 6, 
                   repeat: Infinity,
                   ease: "easeInOut"
                 }
               }}
               className="absolute inset-0 flex items-center justify-center"
             >
-              <div className="absolute inset-0 bg-secondary rounded-full blur-[120px] opacity-20"></div>
+              <div className="absolute inset-0 bg-secondary/30 rounded-full blur-[150px] opacity-40 animate-pulse"></div>
               <motion.img 
                 src={currentHero.url} 
                 alt={currentHero.name}
-                className="relative z-10 w-full h-auto drop-shadow-[0_35px_35px_rgba(255,122,0,0.3)]"
+                className="relative z-10 w-full h-auto drop-shadow-[0_50px_50px_rgba(0,0,0,0.5)] filter brightness-110"
                 referrerPolicy="no-referrer"
-                whileHover={{ scale: 1.1, rotate: 5 }}
+                whileHover={{ scale: 1.15, rotate: 8, z: 100 }}
+                transition={{ type: "spring", stiffness: 300 }}
               />
               
               {/* Floating 3D Badges */}
               <motion.div 
-                animate={{ y: [0, 15, 0], rotateZ: [0, 5, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-10 -right-10 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 z-20"
+                animate={{ y: [0, 20, 0], rotateZ: [0, 8, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-10 -right-10 glass-card p-6 z-20 border-white/30"
               >
-                <span className="text-secondary font-black text-xl">{currentHero.name}</span>
+                <span className="text-secondary font-black text-2xl tracking-tighter">{currentHero.name}</span>
               </motion.div>
               
               <motion.div 
-                animate={{ y: [0, -15, 0], rotateZ: [0, -5, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute -bottom-10 -left-10 bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20 z-20"
+                animate={{ y: [0, -20, 0], rotateZ: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute -bottom-10 -left-10 glass-card p-6 z-20 border-white/30"
               >
-                <span className="text-white font-bold">PREMIUM EDITION</span>
+                <span className="text-white font-black tracking-widest text-xs uppercase">PREMIUM EDITION</span>
               </motion.div>
             </motion.div>
           </AnimatePresence>
           
           {/* Slider Indicators */}
-          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-2 z-30">
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 flex gap-3 z-30">
             {HERO_IMAGES.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  currentIndex === idx ? 'w-8 bg-secondary' : 'bg-white/30'
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  currentIndex === idx ? 'w-12 bg-secondary shadow-[0_0_15px_rgba(255,99,33,0.8)]' : 'w-4 bg-white/20 hover:bg-white/40'
                 }`}
               />
             ))}

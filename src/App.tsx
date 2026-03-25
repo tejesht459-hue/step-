@@ -6,7 +6,7 @@ import { ProductCard } from './components/ProductCard';
 import { PRODUCTS, CATEGORIES, BRANDS } from './constants';
 import { Product, Page, CartItem, User } from './types';
 import { motion, AnimatePresence } from 'motion/react';
-import { Filter, ChevronRight, Mail, Phone, MapPin, Send, Footprints, User as UserIcon, Package, Settings, LogOut } from 'lucide-react';
+import { Filter, ChevronRight, ArrowRight, Mail, Phone, MapPin, Send, Footprints, User as UserIcon, Package, Settings, LogOut } from 'lucide-react';
 import { CartDrawer } from './components/CartDrawer';
 import { ShoeViewer } from './components/ShoeViewer';
 import { X, Box, Star, ShoppingCart, Heart } from 'lucide-react';
@@ -92,38 +92,33 @@ export default function App() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="text-3xl font-black text-primary">SHOP BY CATEGORY</h2>
-            <div className="h-1 w-20 bg-secondary mt-2"></div>
+            <h2 className="text-3xl font-black text-white text-3d uppercase tracking-tight">SHOP BY CATEGORY</h2>
+            <div className="h-1.5 w-24 bg-secondary mt-2 rounded-full"></div>
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {CATEGORIES.map((cat, idx) => (
-            <motion.div
+            <motion.div 
               key={cat}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ 
-                scale: 1.05,
-                rotateY: 10,
-                z: 50
-              }}
-              transition={{ delay: idx * 0.1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              whileHover={{ y: -10, scale: 1.05 }}
               viewport={{ once: true }}
+              transition={{ delay: idx * 0.1 }}
               onClick={() => { setSelectedCategory(cat); setCurrentPage('shop'); }}
-              className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
-              style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
+              className="glass-card group cursor-pointer aspect-[4/5] relative overflow-hidden"
             >
               <img 
-                src={`https://images.unsplash.com/photo-${idx === 0 ? '1542291026-7eec264c27ff' : idx === 1 ? '1614252235316-8c857d38b5f4' : idx === 2 ? '1560769629-975ec94e6a86' : '1519415943484-9fa1873496d4'}?auto=format&fit=crop&q=80&w=600`}
+                src={`https://images.unsplash.com/photo-${idx === 0 ? '1542291026-7eec264c27ff' : idx === 1 ? '1449505273114-2bd4c4066cd2' : idx === 2 ? '1560769629-975ec94e6a86' : '1514989940723-e8e51635b782'}?auto=format&fit=crop&q=80&w=400`}
                 alt={cat}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-6">
-                <h3 className="text-white font-bold text-xl">{cat}</h3>
-                <div className="flex items-center gap-2 text-secondary text-sm font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                  Explore <ChevronRight size={16} />
-                </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
+                <h3 className="text-xl font-black text-white uppercase tracking-widest">{cat}</h3>
+                <p className="text-secondary font-bold text-xs mt-1 flex items-center gap-1">
+                  Explore <ChevronRight size={14} />
+                </p>
               </div>
             </motion.div>
           ))}
@@ -131,144 +126,143 @@ export default function App() {
       </section>
 
       {/* Trending Section */}
-      <section className="bg-white py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-10">
-            <div>
-              <h2 className="text-3xl font-black text-primary uppercase">Trending Now</h2>
-              <p className="text-gray-500 mt-2">The most popular picks of the season</p>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="glass-panel relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/20 blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+              <div>
+                <span className="text-secondary font-black text-xs uppercase tracking-[0.3em] mb-2 block">Hot Deals</span>
+                <h2 className="text-4xl font-black text-white text-3d uppercase tracking-tight">Trending Now</h2>
+                <div className="h-1.5 w-24 bg-secondary mt-4 rounded-full"></div>
+              </div>
+              <button 
+                onClick={() => setCurrentPage('shop')}
+                className="btn-secondary flex items-center gap-2 group"
+              >
+                View All Collection
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+              </button>
             </div>
-            <button 
-              onClick={() => setCurrentPage('shop')}
-              className="text-secondary font-bold flex items-center gap-1 hover:gap-2 transition-all"
-            >
-              View All <ChevronRight size={20} />
-            </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {trendingProducts.map(product => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                onAddToCart={handleAddToCart}
-                isLiked={wishlist.some(p => p.id === product.id)}
-                onToggleWishlist={toggleWishlist}
-                onView3D={setSelectedProductFor3D}
-              />
-            ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {trendingProducts.slice(0, 4).map(product => (
+                <ProductCard 
+                  key={product.id} 
+                  product={product} 
+                  onAddToCart={handleAddToCart}
+                  isLiked={wishlist.some(p => p.id === product.id)}
+                  onToggleWishlist={toggleWishlist}
+                  onView3D={(p) => setSelectedProductFor3D(p)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Promo Banner */}
+      {/* Features */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-secondary rounded-3xl p-12 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
-          <div className="relative z-10 text-white max-w-lg">
-            <h2 className="text-4xl font-black mb-4">JOIN THE CLUB & GET 20% OFF</h2>
-            <p className="text-white/80 mb-8">Sign up for our newsletter and get exclusive access to new drops and special promotions.</p>
-            <div className="flex gap-2">
-              <input 
-                type="email" 
-                placeholder="Enter your email" 
-                className="bg-white rounded-lg px-6 py-3 text-primary w-full outline-none"
-              />
-              <button className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors whitespace-nowrap">
-                Sign Up
-              </button>
-            </div>
-          </div>
-          <div className="relative z-10 hidden md:block">
-            <Footprints size={180} className="text-white/10 rotate-12" />
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {[
+            { icon: <Box className="text-secondary" size={32} />, title: 'Free Delivery', desc: 'On all orders above ₹2,999' },
+            { icon: <Star className="text-secondary" size={32} />, title: 'Premium Quality', desc: '100% authentic footwear' },
+            { icon: <ShoppingCart className="text-secondary" size={32} />, title: 'Secure Payment', desc: 'Safe & encrypted transactions' }
+          ].map((feature, i) => (
+            <motion.div 
+              key={i}
+              whileHover={{ y: -5 }}
+              className="glass-card p-8 flex flex-col items-center text-center"
+            >
+              <div className="mb-4 p-4 bg-white/10 rounded-2xl shadow-inner">{feature.icon}</div>
+              <h3 className="text-lg font-black text-white uppercase tracking-wider mb-2">{feature.title}</h3>
+              <p className="text-white/60 text-sm">{feature.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
     </div>
   );
 
   const renderShop = () => (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex flex-col md:flex-row gap-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="flex flex-col md:flex-row gap-12">
         {/* Filters Sidebar */}
         <aside className="w-full md:w-64 space-y-8">
-          <div className="flex items-center gap-2 text-primary font-bold text-xl mb-6">
-            <Filter size={20} />
-            Filters
-          </div>
-
-          <div>
-            <h4 className="font-bold text-sm uppercase tracking-wider mb-4">Category</h4>
-            <div className="space-y-2">
-              <button 
-                onClick={() => setSelectedCategory('All')}
-                className={`block text-sm transition-colors ${selectedCategory === 'All' ? 'text-secondary font-bold' : 'text-gray-500 hover:text-primary'}`}
-              >
-                All Categories
-              </button>
-              {CATEGORIES.map(cat => (
-                <button 
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`block text-sm transition-colors ${selectedCategory === cat ? 'text-secondary font-bold' : 'text-gray-500 hover:text-primary'}`}
-                >
-                  {cat}
-                </button>
-              ))}
+          <div className="glass-panel p-6">
+            <div className="flex items-center gap-2 text-white font-black text-xl mb-6 uppercase tracking-wider">
+              <Filter size={20} className="text-secondary" />
+              Filters
             </div>
-          </div>
 
-          <div>
-            <h4 className="font-bold text-sm uppercase tracking-wider mb-4">Brand</h4>
-            <div className="grid grid-cols-2 gap-2">
-              <button 
-                onClick={() => setSelectedBrand('All')}
-                className={`text-xs p-2 rounded border transition-all ${selectedBrand === 'All' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:border-primary'}`}
-              >
-                All
-              </button>
-              {BRANDS.map(brand => (
-                <button 
-                  key={brand}
-                  onClick={() => setSelectedBrand(brand)}
-                  className={`text-xs p-2 rounded border transition-all ${selectedBrand === brand ? 'bg-primary text-white border-primary' : 'bg-white text-gray-500 border-gray-200 hover:border-primary'}`}
-                >
-                  {brand}
-                </button>
-              ))}
-            </div>
-          </div>
+            <div className="space-y-8">
+              <div>
+                <h4 className="font-black text-[10px] text-white/60 uppercase tracking-widest mb-4">Category</h4>
+                <div className="flex flex-col gap-2">
+                  <button 
+                    onClick={() => setSelectedCategory('All')}
+                    className={`text-left text-sm transition-colors ${selectedCategory === 'All' ? 'text-secondary font-bold' : 'text-white/70 hover:text-white'}`}
+                  >
+                    All Categories
+                  </button>
+                  {CATEGORIES.map(cat => (
+                    <button 
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`text-left text-sm transition-colors ${selectedCategory === cat ? 'text-secondary font-bold' : 'text-white/70 hover:text-white'}`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h4 className="font-bold text-sm uppercase tracking-wider">Price Range</h4>
-              <span className="text-xs font-bold text-secondary">Up to ₹{priceRange.toLocaleString('en-IN')}</span>
-            </div>
-            <input 
-              type="range" 
-              min="500" 
-              max="15000" 
-              step="500"
-              value={priceRange}
-              onChange={(e) => setPriceRange(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-secondary"
-            />
-            <div className="flex justify-between text-[10px] text-gray-400 mt-2">
-              <span>₹500</span>
-              <span>₹15,000</span>
+              <div>
+                <h4 className="font-black text-[10px] text-white/60 uppercase tracking-widest mb-4">Brand</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  <button 
+                    onClick={() => setSelectedBrand('All')}
+                    className={`text-[10px] font-bold p-2 rounded-lg border transition-all ${selectedBrand === 'All' ? 'bg-secondary text-white border-secondary' : 'bg-white/10 text-white/70 border-white/20 hover:border-white/40'}`}
+                  >
+                    ALL
+                  </button>
+                  {BRANDS.map(brand => (
+                    <button 
+                      key={brand}
+                      onClick={() => setSelectedBrand(brand)}
+                      className={`text-[10px] font-bold p-2 rounded-lg border transition-all ${selectedBrand === brand ? 'bg-secondary text-white border-secondary' : 'bg-white/10 text-white/70 border-white/20 hover:border-white/40'}`}
+                    >
+                      {brand.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-black text-[10px] text-white/60 uppercase tracking-widest">Price Range</h4>
+                  <span className="text-[10px] font-black text-secondary">₹{priceRange.toLocaleString('en-IN')}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min="500" 
+                  max="15000" 
+                  step="500"
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(parseInt(e.target.value))}
+                  className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-secondary"
+                />
+              </div>
             </div>
           </div>
         </aside>
 
         {/* Product Grid */}
         <div className="flex-1">
-          <div className="flex justify-between items-center mb-8">
-            <p className="text-gray-500 text-sm">Showing <span className="font-bold text-primary">{filteredProducts.length}</span> products</p>
-            <select className="bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm outline-none focus:ring-1 focus:ring-secondary">
-              <option>Sort by: Featured</option>
-              <option>Price: Low to High</option>
-              <option>Price: High to Low</option>
-              <option>Newest Arrivals</option>
-            </select>
+          <div className="flex justify-between items-center mb-10">
+            <h2 className="text-3xl font-black text-white text-3d uppercase tracking-tight">
+              {selectedCategory === 'All' ? 'All Footwear' : selectedCategory}
+            </h2>
+            <span className="text-xs font-bold text-white/60 uppercase tracking-widest">{filteredProducts.length} Products</span>
           </div>
 
           {filteredProducts.length > 0 ? (
@@ -285,15 +279,15 @@ export default function App() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-20 bg-white rounded-3xl">
-              <div className="bg-gray-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Filter size={32} className="text-gray-400" />
+            <div className="glass-panel text-center py-20">
+              <div className="bg-white/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                <Filter size={32} className="text-white/40" />
               </div>
-              <h3 className="text-xl font-bold text-primary mb-2">No products found</h3>
-              <p className="text-gray-500">Try adjusting your filters to find what you're looking for.</p>
+              <h3 className="text-xl font-black text-white mb-2 uppercase tracking-wider">No products found</h3>
+              <p className="text-white/60">Try adjusting your filters to find what you're looking for.</p>
               <button 
-                onClick={() => { setSelectedCategory('All'); setSelectedBrand('All'); setPriceRange(200); }}
-                className="mt-6 text-secondary font-bold"
+                onClick={() => { setSelectedCategory('All'); setSelectedBrand('All'); setPriceRange(15000); }}
+                className="mt-8 btn-secondary"
               >
                 Clear all filters
               </button>
