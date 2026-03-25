@@ -12,6 +12,7 @@ interface NavbarProps {
   onCartOpen: () => void;
   isLoggedIn: boolean;
   onProductSelect?: (product: Product) => void;
+  onCategorySelect?: (category: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -21,7 +22,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   wishlistCount,
   onCartOpen,
   isLoggedIn,
-  onProductSelect
+  onProductSelect,
+  onCategorySelect
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -156,15 +158,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 Shop Categories
               </button>
-              <div className="absolute top-full left-0 bg-white shadow-xl rounded-xl p-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border border-gray-100">
+              <div className="absolute top-full left-0 glass-panel p-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all border-white/20 shadow-2xl">
                 <div className="flex flex-col gap-2">
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Men</button>
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Women</button>
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Kids</button>
-                  <hr className="border-gray-100" />
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Sports</button>
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Casual</button>
-                  <button onClick={() => { setCurrentPage('shop'); }} className="text-left text-sm hover:text-secondary transition-colors">Formal</button>
+                  <button onClick={() => { onCategorySelect?.('Formal'); setCurrentPage('shop'); }} className="text-left text-sm text-white hover:text-secondary transition-colors font-bold">Formal Collection</button>
+                  <button onClick={() => { onCategorySelect?.('Sports'); setCurrentPage('shop'); }} className="text-left text-sm text-white hover:text-secondary transition-colors font-bold">Sports & Running</button>
+                  <button onClick={() => { onCategorySelect?.('Casual'); setCurrentPage('shop'); }} className="text-left text-sm text-white hover:text-secondary transition-colors font-bold">Casual Wear</button>
+                  <button onClick={() => { onCategorySelect?.('Kids'); setCurrentPage('shop'); }} className="text-left text-sm text-white hover:text-secondary transition-colors font-bold">Kids Zone</button>
                 </div>
               </div>
             </div>

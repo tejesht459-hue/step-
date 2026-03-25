@@ -213,7 +213,19 @@ export const PRODUCTS: Product[] = [
     isTrending: true,
     rating: 4.3,
     reviewsCount: 560,
-    availableSizes: [6, 7, 8, 9, 10],
+    availableSizes: [7, 8, 9, 10, 11],
+  },
+  {
+    id: '21',
+    name: 'Royal Patent Tuxedo',
+    price: 8900,
+    category: 'Formal',
+    brand: 'Louis Philippe',
+    image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=800',
+    isTrending: true,
+    rating: 4.9,
+    reviewsCount: 450,
+    availableSizes: [7, 8, 9, 10, 11, 12],
   }
 ];
 

@@ -96,8 +96,8 @@ export default function App() {
             <div className="h-1.5 w-24 bg-secondary mt-2 rounded-full"></div>
           </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {CATEGORIES.map((cat, idx) => (
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          {CATEGORIES.filter(cat => cat !== 'Formal').map((cat, idx) => (
             <motion.div 
               key={cat}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -127,33 +127,51 @@ export default function App() {
 
       {/* Trending Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="glass-panel relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-secondary/20 blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
-          <div className="relative z-10">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-              <div>
-                <span className="text-secondary font-black text-xs uppercase tracking-[0.3em] mb-2 block">Hot Deals</span>
-                <h2 className="text-4xl font-black text-white text-3d uppercase tracking-tight">Trending Now</h2>
-                <div className="h-1.5 w-24 bg-secondary mt-4 rounded-full"></div>
+        <div className="glass-panel relative overflow-visible group">
+          {/* Decorative Elements */}
+          <div className="absolute -top-20 -left-20 w-64 h-64 bg-secondary/10 rounded-full blur-[100px] animate-pulse"></div>
+          <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[100px] animate-pulse delay-700"></div>
+          
+          <div className="relative z-10 p-8 md:p-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-px w-12 bg-secondary/50"></div>
+                  <span className="text-secondary font-black text-[10px] uppercase tracking-[0.5em]">Curated Excellence</span>
+                </div>
+                <h2 className="text-5xl md:text-7xl font-black text-white text-3d uppercase tracking-tighter leading-none">
+                  Trending <br/> <span className="text-secondary">Showcase</span>
+                </h2>
+                <p className="text-white/40 text-sm max-w-md font-medium">
+                  Explore the most sought-after designs of the season. Handpicked for quality, style, and performance.
+                </p>
               </div>
               <button 
                 onClick={() => setCurrentPage('shop')}
-                className="btn-secondary flex items-center gap-2 group"
+                className="btn-secondary flex items-center gap-3 group px-8 py-4 shadow-[0_20px_40px_rgba(255,99,33,0.2)]"
               >
-                View All Collection
-                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                Explore Full Collection
+                <ArrowRight size={20} className="group-hover:translate-x-1.5 transition-transform" />
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {trendingProducts.slice(0, 4).map(product => (
-                <ProductCard 
-                  key={product.id} 
-                  product={product} 
-                  onAddToCart={handleAddToCart}
-                  isLiked={wishlist.some(p => p.id === product.id)}
-                  onToggleWishlist={toggleWishlist}
-                  onView3D={(p) => setSelectedProductFor3D(p)}
-                />
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+              {trendingProducts.slice(0, 4).map((product, idx) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                >
+                  <ProductCard 
+                    product={product} 
+                    onAddToCart={handleAddToCart}
+                    isLiked={wishlist.some(p => p.id === product.id)}
+                    onToggleWishlist={toggleWishlist}
+                    onView3D={(p) => setSelectedProductFor3D(p)}
+                  />
+                </motion.div>
               ))}
             </div>
           </div>
@@ -162,20 +180,41 @@ export default function App() {
 
       {/* Features */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {[
-            { icon: <Box className="text-secondary" size={32} />, title: 'Free Delivery', desc: 'On all orders above ₹2,999' },
-            { icon: <Star className="text-secondary" size={32} />, title: 'Premium Quality', desc: '100% authentic footwear' },
-            { icon: <ShoppingCart className="text-secondary" size={32} />, title: 'Secure Payment', desc: 'Safe & encrypted transactions' }
+            { 
+              icon: <Box className="text-secondary" size={32} />, 
+              title: 'Global Shipping', 
+              desc: 'Premium logistics for worldwide delivery with real-time tracking.',
+              accent: 'bg-secondary/20'
+            },
+            { 
+              icon: <Star className="text-secondary" size={32} />, 
+              title: 'Elite Quality', 
+              desc: 'Meticulously crafted using the finest materials and 3D precision.',
+              accent: 'bg-primary/20'
+            },
+            { 
+              icon: <ShoppingCart className="text-secondary" size={32} />, 
+              title: 'Secure Vault', 
+              desc: 'Military-grade encryption for all your transactions and data.',
+              accent: 'bg-blue-500/20'
+            }
           ].map((feature, i) => (
             <motion.div 
               key={i}
-              whileHover={{ y: -5 }}
-              className="glass-card p-8 flex flex-col items-center text-center"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -10, scale: 1.02 }}
+              className="glass-card p-10 flex flex-col items-center text-center group border-white/5"
             >
-              <div className="mb-4 p-4 bg-white/10 rounded-2xl shadow-inner">{feature.icon}</div>
-              <h3 className="text-lg font-black text-white uppercase tracking-wider mb-2">{feature.title}</h3>
-              <p className="text-white/60 text-sm">{feature.desc}</p>
+              <div className={`mb-6 p-6 ${feature.accent} rounded-[2rem] shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+                {feature.icon}
+              </div>
+              <h3 className="text-xl font-black text-white uppercase tracking-widest mb-4 group-hover:text-secondary transition-colors">{feature.title}</h3>
+              <p className="text-white/50 text-sm leading-relaxed font-medium">{feature.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -749,6 +788,7 @@ export default function App() {
             setCurrentPage('shop');
           }
         }}
+        onCategorySelect={(category) => setSelectedCategory(category)}
       />
       
       <main className="flex-1">
