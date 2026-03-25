@@ -21,7 +21,7 @@ export default function App() {
     email: 'tejesht459@gmail.com',
     phone: '9182916604',
     address: '45, MG Road, Indiranagar, Bengaluru, Karnataka 560038',
-    avatar: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&q=80&w=200'
+    avatar: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=200'
   });
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<Product[]>([]);
@@ -114,7 +114,7 @@ export default function App() {
               style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
             >
               <img 
-                src={`https://images.unsplash.com/photo-${idx === 0 ? '1542291026-7eec264c27ff' : idx === 1 ? '1533867617858-e7b97e060509' : idx === 2 ? '1525966222134-fcfa99b8ae77' : '1514989940723-e8e51635b782'}?auto=format&fit=crop&q=80&w=600`}
+                src={`https://images.unsplash.com/photo-${idx === 0 ? '1542291026-7eec264c27ff' : idx === 1 ? '1614252235316-8c857d38b5f4' : idx === 2 ? '1560769629-975ec94e6a86' : '1519415943484-9fa1873496d4'}?auto=format&fit=crop&q=80&w=600`}
                 alt={cat}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 referrerPolicy="no-referrer"
@@ -579,8 +579,8 @@ export default function App() {
         >
           <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
             <img 
-              src="https://images.unsplash.com/photo-1556906781-9a412961c28c?auto=format&fit=crop&q=80&w=800" 
-              alt="Our Workshop" 
+              src="https://images.unsplash.com/photo-1549298916-b41d501d3772?auto=format&fit=crop&q=80&w=800" 
+              alt="Our Collection" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
@@ -633,7 +633,7 @@ export default function App() {
   const renderWishlist = () => (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div className="flex flex-col items-center text-center mb-16">
-        <h2 className="text-4xl font-black text-primary mb-4 uppercase tracking-tight">Your Watch List</h2>
+        <h2 className="text-4xl font-black text-primary mb-4 uppercase tracking-tight">Your Wishlist</h2>
         <div className="h-1.5 w-24 bg-secondary rounded-full"></div>
         <p className="text-gray-500 mt-6 max-w-lg">Keep track of the styles you love. Add them to your cart whenever you're ready to step up your game.</p>
       </div>
