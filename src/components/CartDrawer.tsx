@@ -7,8 +7,8 @@ interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   items: CartItem[];
-  onUpdateQuantity: (id: string, delta: number) => void;
-  onRemove: (id: string) => void;
+  onUpdateQuantity: (id: string, size: number, delta: number) => void;
+  onRemove: (id: string, size: number) => void;
   userName?: string;
 }
 
@@ -30,6 +30,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     
     items.forEach((item, index) => {
       message += `${index + 1}. *${item.name}*\n`;
+      message += `   Size: UK ${item.selectedSize}\n`;
       message += `   Qty: ${item.quantity}\n`;
       message += `   Price: ₹${(item.price * item.quantity).toLocaleString('en-IN')}\n\n`;
     });
@@ -95,7 +96,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
               ) : (
                 items.map((item) => (
-                  <div key={item.id} className="flex gap-4 group">
+                  <div key={`${item.id}-${item.selectedSize}`} className="flex gap-4 group">
                     <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
                       <img 
                         src={item.image} 
@@ -109,18 +110,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         <div className="flex justify-between items-start">
                           <h4 className="font-bold text-primary line-clamp-1">{item.name}</h4>
                           <button 
-                            onClick={() => onRemove(item.id)}
+                            onClick={() => onRemove(item.id, item.selectedSize)}
                             className="text-gray-400 hover:text-red-500 transition-colors"
                           >
                             <Trash2 size={18} />
                           </button>
                         </div>
-                        <p className="text-xs text-gray-400 uppercase tracking-wider">{item.brand} • {item.category}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <p className="text-xs text-gray-400 uppercase tracking-wider">{item.brand}</p>
+                          <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                          <p className="text-xs font-bold text-secondary">UK {item.selectedSize}</p>
+                        </div>
                       </div>
                       <div className="flex justify-between items-center">
                         <div className="flex items-center gap-3 bg-gray-100 rounded-lg p-1">
                           <button 
-                            onClick={() => onUpdateQuantity(item.id, -1)}
+                            onClick={() => onUpdateQuantity(item.id, item.selectedSize, -1)}
                             disabled={item.quantity <= 1}
                             className="p-1 hover:bg-white rounded-md transition-all disabled:opacity-30"
                           >
@@ -128,7 +133,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </button>
                           <span className="text-sm font-bold w-4 text-center">{item.quantity}</span>
                           <button 
-                            onClick={() => onUpdateQuantity(item.id, 1)}
+                            onClick={() => onUpdateQuantity(item.id, item.selectedSize, 1)}
                             className="p-1 hover:bg-white rounded-md transition-all"
                           >
                             <Plus size={14} />

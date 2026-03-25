@@ -8,9 +8,13 @@ import { Product, Page, CartItem, User } from './types';
 import { motion, AnimatePresence } from 'motion/react';
 import { Filter, ChevronRight, Mail, Phone, MapPin, Send, Footprints, User as UserIcon, Package, Settings, LogOut } from 'lucide-react';
 import { CartDrawer } from './components/CartDrawer';
+import { ShoeViewer } from './components/ShoeViewer';
+import { X, Box, Star, ShoppingCart, Heart } from 'lucide-react';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [selectedProductFor3D, setSelectedProductFor3D] = useState<Product | null>(null);
+  const [selectedSizeFor3D, setSelectedSizeFor3D] = useState<number | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user] = useState<User>({
     name: 'Tejesh T',
@@ -36,27 +40,27 @@ export default function App() {
     }
   }, [currentPage]);
 
-  const handleAddToCart = (product: Product) => {
+  const handleAddToCart = (product: Product, size: number) => {
     setCartItems(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const existing = prev.find(item => item.id === product.id && item.selectedSize === size);
       if (existing) {
         return prev.map(item => 
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          (item.id === product.id && item.selectedSize === size) ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity: 1, selectedSize: size }];
     });
     setIsCartOpen(true);
   };
 
-  const updateQuantity = (id: string, delta: number) => {
+  const updateQuantity = (id: string, size: number, delta: number) => {
     setCartItems(prev => prev.map(item => 
-      item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
+      (item.id === id && item.selectedSize === size) ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
     ));
   };
 
-  const removeFromCart = (id: string) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  const removeFromCart = (id: string, size: number) => {
+    setCartItems(prev => prev.filter(item => !(item.id === id && item.selectedSize === size)));
   };
 
   const toggleWishlist = (product: Product) => {
@@ -98,10 +102,16 @@ export default function App() {
               key={cat}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
+              whileHover={{ 
+                scale: 1.05,
+                rotateY: 10,
+                z: 50
+              }}
               transition={{ delay: idx * 0.1 }}
               viewport={{ once: true }}
               onClick={() => { setSelectedCategory(cat); setCurrentPage('shop'); }}
               className="relative h-64 rounded-2xl overflow-hidden cursor-pointer group"
+              style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
             >
               <img 
                 src={`https://images.unsplash.com/photo-${idx === 0 ? '1542291026-7eec264c27ff' : idx === 1 ? '1533867617858-e7b97e060509' : idx === 2 ? '1525966222134-fcfa99b8ae77' : '1514989940723-e8e51635b782'}?auto=format&fit=crop&q=80&w=600`}
@@ -143,6 +153,7 @@ export default function App() {
                 onAddToCart={handleAddToCart}
                 isLiked={wishlist.some(p => p.id === product.id)}
                 onToggleWishlist={toggleWishlist}
+                onView3D={setSelectedProductFor3D}
               />
             ))}
           </div>
@@ -269,6 +280,7 @@ export default function App() {
                   onAddToCart={handleAddToCart}
                   isLiked={wishlist.some(p => p.id === product.id)}
                   onToggleWishlist={toggleWishlist}
+                  onView3D={setSelectedProductFor3D}
                 />
               ))}
             </div>
@@ -635,6 +647,7 @@ export default function App() {
               onAddToCart={handleAddToCart}
               isLiked={true}
               onToggleWishlist={toggleWishlist}
+              onView3D={setSelectedProductFor3D}
             />
           ))}
         </div>
@@ -735,6 +748,13 @@ export default function App() {
         wishlistCount={wishlist.length}
         onCartOpen={() => setIsCartOpen(true)}
         isLoggedIn={isLoggedIn}
+        onProductSelect={(product) => {
+          if (product.modelUrl) {
+            setSelectedProductFor3D(product);
+          } else {
+            setCurrentPage('shop');
+          }
+        }}
       />
       
       <main className="flex-1">
@@ -767,6 +787,113 @@ export default function App() {
         onRemove={removeFromCart}
         userName={user.name}
       />
+
+      {/* 3D Viewer Modal */}
+      <AnimatePresence>
+        {selectedProductFor3D && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedProductFor3D(null)}
+              className="absolute inset-0 bg-primary/80 backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative bg-white w-full max-w-4xl rounded-[2.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row"
+            >
+              <button 
+                onClick={() => setSelectedProductFor3D(null)}
+                className="absolute top-6 right-6 z-50 p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="w-full md:w-3/5 h-[400px] md:h-[600px]">
+                {selectedProductFor3D.modelUrl && (
+                  <ShoeViewer modelUrl={selectedProductFor3D.modelUrl} />
+                )}
+              </div>
+
+              <div className="w-full md:w-2/5 p-8 md:p-12 flex flex-col justify-center bg-gray-50/50">
+                <div className="mb-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="bg-secondary/10 text-secondary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">{selectedProductFor3D.brand}</span>
+                    <span className="bg-primary/10 text-primary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest flex items-center gap-1">
+                      <Box size={10} /> 3D Model
+                    </span>
+                  </div>
+                  <h2 className="text-3xl font-black text-primary mb-2 uppercase">{selectedProductFor3D.name}</h2>
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="flex items-center text-yellow-500">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} size={14} fill={i < Math.floor(selectedProductFor3D.rating) ? "currentColor" : "none"} className={i < Math.floor(selectedProductFor3D.rating) ? "" : "text-gray-200"} />
+                      ))}
+                    </div>
+                    <span className="text-sm font-bold text-primary">{selectedProductFor3D.rating}</span>
+                    <span className="text-xs text-gray-400">({selectedProductFor3D.reviewsCount.toLocaleString()} reviews)</span>
+                  </div>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-8">
+                    Experience our premium footwear in full 3D. Rotate, zoom, and inspect every detail of the {selectedProductFor3D.name}. Crafted for those who demand both style and substance.
+                  </p>
+
+                  <div className="mb-8">
+                    <p className="text-xs font-bold text-gray-400 uppercase mb-3">Select Size (UK)</p>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProductFor3D.availableSizes.map(size => (
+                        <button
+                          key={size}
+                          onClick={() => setSelectedSizeFor3D(size)}
+                          className={`w-10 h-10 rounded-xl text-sm font-bold transition-all ${
+                            selectedSizeFor3D === size 
+                              ? 'bg-secondary text-white shadow-lg scale-110' 
+                              : 'bg-white border border-gray-200 text-primary hover:border-secondary'
+                          }`}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="text-4xl font-black text-primary mb-8">₹{selectedProductFor3D.price.toLocaleString('en-IN')}</div>
+                </div>
+
+                <div className="flex gap-4">
+                  <button 
+                    onClick={() => { 
+                      if (selectedSizeFor3D) {
+                        handleAddToCart(selectedProductFor3D, selectedSizeFor3D); 
+                        setSelectedProductFor3D(null);
+                        setSelectedSizeFor3D(null);
+                      } else {
+                        alert('Please select a size first');
+                      }
+                    }}
+                    className={`flex-1 py-4 flex items-center justify-center gap-2 rounded-2xl font-bold transition-all ${
+                      selectedSizeFor3D 
+                        ? 'bg-secondary text-white hover:bg-secondary/90' 
+                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    <ShoppingCart size={20} />
+                    {selectedSizeFor3D ? `Add Size ${selectedSizeFor3D}` : 'Select Size'}
+                  </button>
+                  <button 
+                    onClick={() => toggleWishlist(selectedProductFor3D)}
+                    className={`p-4 rounded-2xl border transition-all ${wishlist.some(p => p.id === selectedProductFor3D.id) ? 'bg-red-50 border-red-100 text-red-500' : 'bg-white border-gray-200 text-primary hover:border-primary'}`}
+                  >
+                    <Heart size={24} fill={wishlist.some(p => p.id === selectedProductFor3D.id) ? "currentColor" : "none"} />
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

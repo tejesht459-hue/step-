@@ -1,6 +1,8 @@
-import React from 'react';
-import { Search, ShoppingCart, User, Footprints, Menu, X, Heart } from 'lucide-react';
-import { Page } from '../types';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, ShoppingCart, User, Footprints, Menu, X, Heart, ArrowRight } from 'lucide-react';
+import { Page, Product } from '../types';
+import { PRODUCTS } from '../constants';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface NavbarProps {
   currentPage: Page;
@@ -9,6 +11,7 @@ interface NavbarProps {
   wishlistCount: number;
   onCartOpen: () => void;
   isLoggedIn: boolean;
+  onProductSelect?: (product: Product) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -17,9 +20,50 @@ export const Navbar: React.FC<NavbarProps> = ({
   cartCount, 
   wishlistCount,
   onCartOpen,
-  isLoggedIn
+  isLoggedIn,
+  onProductSelect
 }) => {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState<Product[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (searchQuery.trim().length > 1) {
+      const filtered = PRODUCTS.filter(p => 
+        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchQuery.toLowerCase())
+      ).slice(0, 5);
+      setSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSuggestionClick = (product: Product) => {
+    setSearchQuery('');
+    setShowSuggestions(false);
+    if (onProductSelect) {
+      onProductSelect(product);
+    } else {
+      // Default behavior if no specific handler: go to shop
+      setCurrentPage('shop');
+    }
+  };
 
   return (
     <nav className="glass-nav">
@@ -38,13 +82,57 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <div className="relative w-full">
+            <div className="relative w-full" ref={searchRef}>
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => searchQuery.length > 1 && setShowSuggestions(true)}
                 placeholder="Search for footwear..."
                 className="w-full bg-gray-100 border-none rounded-full py-2 pl-10 pr-4 focus:ring-2 focus:ring-secondary focus:bg-white transition-all outline-none text-sm"
               />
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+
+              {/* Suggestions Dropdown */}
+              <AnimatePresence>
+                {showSuggestions && suggestions.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50"
+                  >
+                    <div className="p-2">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 py-2">Suggestions</p>
+                      {suggestions.map((product) => (
+                        <button
+                          key={product.id}
+                          onClick={() => handleSuggestionClick(product)}
+                          className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-xl transition-colors group text-left"
+                        >
+                          <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-primary truncate group-hover:text-secondary transition-colors">{product.name}</p>
+                            <p className="text-[10px] text-gray-500">{product.brand} • {product.category}</p>
+                          </div>
+                          <div className="text-xs font-black text-primary">₹{product.price.toLocaleString('en-IN')}</div>
+                          <ArrowRight size={14} className="text-gray-300 group-hover:text-secondary group-hover:translate-x-1 transition-all" />
+                        </button>
+                      ))}
+                    </div>
+                    {suggestions.length === 5 && (
+                      <button 
+                        onClick={() => { setCurrentPage('shop'); setShowSuggestions(false); }}
+                        className="w-full p-3 bg-gray-50 text-center text-xs font-bold text-secondary hover:bg-gray-100 transition-colors border-t border-gray-100"
+                      >
+                        View all results
+                      </button>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
 
@@ -154,13 +242,47 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden bg-white border-b border-gray-200 py-4 px-4 space-y-4">
-          <div className="relative">
+          <div className="relative" ref={searchRef}>
             <input
               type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => searchQuery.length > 1 && setShowSuggestions(true)}
               placeholder="Search..."
               className="w-full bg-gray-100 border-none rounded-full py-2 pl-10 pr-4 outline-none text-sm"
             />
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            
+            {/* Mobile Suggestions */}
+            <AnimatePresence>
+              {showSuggestions && suggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mt-2 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+                >
+                  <div className="p-2 max-h-64 overflow-y-auto">
+                    {suggestions.map((product) => (
+                      <button
+                        key={product.id}
+                        onClick={() => { handleSuggestionClick(product); setIsMenuOpen(false); }}
+                        className="w-full flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg transition-colors text-left"
+                      >
+                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-bold text-primary truncate">{product.name}</p>
+                          <p className="text-[8px] text-gray-500 uppercase tracking-tighter">{product.brand}</p>
+                        </div>
+                        <div className="text-[10px] font-black text-primary">₹{product.price.toLocaleString('en-IN')}</div>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           <div className="flex flex-col gap-4">
             <button onClick={() => { setCurrentPage('home'); setIsMenuOpen(false); }} className="text-left font-medium">Home</button>

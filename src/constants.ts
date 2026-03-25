@@ -9,6 +9,10 @@ export const PRODUCTS: Product[] = [
     brand: 'Nike',
     image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&q=80&w=800',
     isTrending: true,
+    rating: 4.8,
+    reviewsCount: 1240,
+    modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb',
+    availableSizes: [7, 8, 9, 10, 11],
   },
   {
     id: '2',
@@ -17,6 +21,9 @@ export const PRODUCTS: Product[] = [
     category: 'Formal',
     brand: 'Red Tape',
     image: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?auto=format&fit=crop&q=80&w=800',
+    rating: 4.5,
+    reviewsCount: 850,
+    availableSizes: [6, 7, 8, 9, 10],
   },
   {
     id: '3',
@@ -26,6 +33,10 @@ export const PRODUCTS: Product[] = [
     brand: 'Adidas',
     image: 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?auto=format&fit=crop&q=80&w=800',
     isTrending: true,
+    rating: 4.7,
+    reviewsCount: 2100,
+    modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb',
+    availableSizes: [7, 8, 9, 10, 11],
   },
   {
     id: '4',
@@ -34,6 +45,9 @@ export const PRODUCTS: Product[] = [
     category: 'Casual',
     brand: 'Bata',
     image: 'https://images.unsplash.com/photo-1603487742131-4160ec999306?auto=format&fit=crop&q=80&w=800',
+    rating: 4.2,
+    reviewsCount: 420,
+    availableSizes: [5, 6, 7, 8, 9],
   },
   {
     id: '5',
@@ -42,6 +56,10 @@ export const PRODUCTS: Product[] = [
     category: 'Casual',
     brand: 'Sparx',
     image: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&q=80&w=800',
+    rating: 4.4,
+    reviewsCount: 670,
+    modelUrl: 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/MaterialsVariantsShoe/glTF-Binary/MaterialsVariantsShoe.glb',
+    availableSizes: [6, 7, 8, 9, 10, 11],
   },
   {
     id: '6',
@@ -50,6 +68,9 @@ export const PRODUCTS: Product[] = [
     category: 'Formal',
     brand: 'Louis Philippe',
     image: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?auto=format&fit=crop&q=80&w=800',
+    rating: 4.6,
+    reviewsCount: 320,
+    availableSizes: [7, 8, 9, 10],
   },
   {
     id: '7',
@@ -58,6 +79,9 @@ export const PRODUCTS: Product[] = [
     category: 'Sports',
     brand: 'Puma',
     image: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?auto=format&fit=crop&q=80&w=800',
+    rating: 4.5,
+    reviewsCount: 890,
+    availableSizes: [7, 8, 9, 10, 11],
   },
   {
     id: '8',
@@ -66,6 +90,9 @@ export const PRODUCTS: Product[] = [
     category: 'Casual',
     brand: 'Relaxo',
     image: 'https://images.unsplash.com/photo-1605034313761-73ea4a0cfbf3?auto=format&fit=crop&q=80&w=800',
+    rating: 4.0,
+    reviewsCount: 150,
+    availableSizes: [6, 7, 8, 9, 10],
   },
   {
     id: '9',
@@ -74,6 +101,9 @@ export const PRODUCTS: Product[] = [
     category: 'Kids',
     brand: 'Bata',
     image: 'https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&q=80&w=800',
+    rating: 4.3,
+    reviewsCount: 280,
+    availableSizes: [1, 2, 3, 4, 5],
   },
   {
     id: '10',
@@ -82,6 +112,9 @@ export const PRODUCTS: Product[] = [
     category: 'Formal',
     brand: 'Metro',
     image: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&q=80&w=800',
+    rating: 4.7,
+    reviewsCount: 540,
+    availableSizes: [3, 4, 5, 6, 7, 8],
   },
   {
     id: '11',
@@ -90,6 +123,9 @@ export const PRODUCTS: Product[] = [
     category: 'Casual',
     brand: 'Sparx',
     image: 'https://images.unsplash.com/photo-1560769629-975ec94e6a86?auto=format&fit=crop&q=80&w=800',
+    rating: 4.2,
+    reviewsCount: 310,
+    availableSizes: [6, 7, 8, 9, 10],
   },
   {
     id: '12',
@@ -98,6 +134,9 @@ export const PRODUCTS: Product[] = [
     category: 'Kids',
     brand: 'Puma',
     image: 'https://images.unsplash.com/photo-1519415943484-9fa1873496d4?auto=format&fit=crop&q=80&w=800',
+    rating: 4.4,
+    reviewsCount: 190,
+    availableSizes: [1, 2, 3, 4, 5],
   }
 ];
 

@@ -6,10 +6,15 @@ export interface Product {
   image: string;
   brand: string;
   isTrending?: boolean;
+  rating: number;
+  reviewsCount: number;
+  modelUrl?: string;
+  availableSizes: number[];
 }
 
 export interface CartItem extends Product {
   quantity: number;
+  selectedSize: number;
 }
 
 export interface User {
