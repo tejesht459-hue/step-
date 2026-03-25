@@ -11,6 +11,7 @@ import { CartDrawer } from './components/CartDrawer';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user] = useState<User>({
     name: 'Tejesh T',
     email: 'tejesht459@gmail.com',
@@ -25,6 +26,8 @@ export default function App() {
   const [selectedBrand, setSelectedBrand] = useState<string>('All');
   const [priceRange, setPriceRange] = useState<number>(10000);
   const [profileTab, setProfileTab] = useState<'main' | 'orders' | 'addresses'>('main');
+  const [loginInput, setLoginInput] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
 
   // Reset profile tab when navigating away from profile
   React.useEffect(() => {
@@ -378,6 +381,7 @@ export default function App() {
 
     const handleLogout = () => {
       // Mock logout
+      setIsLoggedIn(false);
       setCurrentPage('home');
       setCartItems([]);
       setWishlist([]);
@@ -652,6 +656,76 @@ export default function App() {
     </div>
   );
 
+  const renderLogin = () => {
+    const handleLoginSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      if (loginInput && loginPassword) {
+        setIsLoggedIn(true);
+        setCurrentPage('home');
+        setLoginInput('');
+        setLoginPassword('');
+        alert('Logged in successfully!');
+      } else {
+        alert('Please enter valid credentials');
+      }
+    };
+
+    return (
+      <div className="max-w-md mx-auto px-4 py-20">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-white rounded-3xl p-8 shadow-2xl border border-gray-100"
+        >
+          <div className="text-center mb-10">
+            <div className="bg-secondary w-16 h-16 rounded-2xl flex items-center justify-center text-white mx-auto mb-4">
+              <Footprints size={32} />
+            </div>
+            <h2 className="text-3xl font-black text-primary uppercase tracking-tight">Welcome Back</h2>
+            <p className="text-gray-500 mt-2">Login to your StepZone account</p>
+          </div>
+
+          <form onSubmit={handleLoginSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-primary">Email or Mobile Number</label>
+              <input 
+                type="text" 
+                value={loginInput}
+                onChange={(e) => setLoginInput(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-secondary transition-all" 
+                placeholder="Enter email or mobile"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <label className="text-sm font-bold text-primary">Password</label>
+                <button type="button" className="text-xs font-bold text-secondary hover:underline">Forgot Password?</button>
+              </div>
+              <input 
+                type="password" 
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-secondary transition-all" 
+                placeholder="••••••••"
+                required
+              />
+            </div>
+            <button type="submit" className="btn-secondary w-full py-4 font-black uppercase tracking-widest">
+              Sign In
+            </button>
+          </form>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-500">
+              Don't have an account? <button className="text-secondary font-bold hover:underline">Create Account</button>
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar 
@@ -660,6 +734,7 @@ export default function App() {
         cartCount={cartItems.reduce((sum, item) => sum + item.quantity, 0)} 
         wishlistCount={wishlist.length}
         onCartOpen={() => setIsCartOpen(true)}
+        isLoggedIn={isLoggedIn}
       />
       
       <main className="flex-1">
@@ -677,6 +752,7 @@ export default function App() {
             {currentPage === 'profile' && renderProfile()}
             {currentPage === 'wishlist' && renderWishlist()}
             {currentPage === 'about' && renderAbout()}
+            {currentPage === 'login' && renderLogin()}
           </motion.div>
         </AnimatePresence>
       </main>

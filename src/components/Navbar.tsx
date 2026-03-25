@@ -8,6 +8,7 @@ interface NavbarProps {
   cartCount: number;
   wishlistCount: number;
   onCartOpen: () => void;
+  isLoggedIn: boolean;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ 
@@ -15,7 +16,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   setCurrentPage, 
   cartCount, 
   wishlistCount,
-  onCartOpen 
+  onCartOpen,
+  isLoggedIn
 }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
@@ -108,12 +110,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </span>
                 )}
               </button>
-              <button 
-                onClick={() => setCurrentPage('profile')}
-                className={`transition-colors ${currentPage === 'profile' ? 'text-secondary' : 'text-primary hover:text-secondary'}`}
-              >
-                <User size={22} />
-              </button>
+              {isLoggedIn ? (
+                <button 
+                  onClick={() => setCurrentPage('profile')}
+                  className={`transition-colors ${currentPage === 'profile' ? 'text-secondary' : 'text-primary hover:text-secondary'}`}
+                >
+                  <User size={22} />
+                </button>
+              ) : (
+                <button 
+                  onClick={() => setCurrentPage('login')}
+                  className={`text-sm font-bold px-4 py-2 rounded-lg transition-all ${currentPage === 'login' ? 'bg-secondary text-white' : 'bg-primary text-white hover:bg-secondary'}`}
+                >
+                  Login
+                </button>
+              )}
             </div>
           </div>
 
@@ -159,9 +170,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button onClick={() => { setCurrentPage('wishlist'); setIsMenuOpen(false); }} className="text-left font-medium flex items-center gap-2">
               <Heart size={18} /> Wishlist
             </button>
-            <button onClick={() => { setCurrentPage('profile'); setIsMenuOpen(false); }} className="text-left font-medium flex items-center gap-2">
-              <User size={18} /> Profile
-            </button>
+            {isLoggedIn ? (
+              <button onClick={() => { setCurrentPage('profile'); setIsMenuOpen(false); }} className="text-left font-medium flex items-center gap-2">
+                <User size={18} /> Profile
+              </button>
+            ) : (
+              <button onClick={() => { setCurrentPage('login'); setIsMenuOpen(false); }} className="text-left font-medium flex items-center gap-2">
+                <User size={18} /> Login
+              </button>
+            )}
           </div>
         </div>
       )}

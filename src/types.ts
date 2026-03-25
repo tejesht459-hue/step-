@@ -20,4 +20,4 @@ export interface User {
   avatar: string;
 }
 
-export type Page = 'home' | 'shop' | 'contact' | 'profile' | 'wishlist' | 'about';
+export type Page = 'home' | 'shop' | 'contact' | 'profile' | 'wishlist' | 'about' | 'login';
